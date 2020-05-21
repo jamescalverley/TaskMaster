@@ -12,6 +12,7 @@ import openSocket from 'socket.io-client';
 import { secureStorage } from '../../utils';
 import Chat from '../Chat/Chat';
 import Modal from 'react-bootstrap/Modal';
+import {connect} from 'react-redux';
 import {
     GlobalUserStore,
     useGlobalUserStore,
@@ -23,6 +24,9 @@ console.log('opening socket on main page');
 // const socket = openSocket('https://taskmaster.kiterunner.usermd.net', query);
 
 function MainPage(props) {
+    const { dispatch } = props
+    const franek = props.user;
+    console.log('logging franek',franek);
     const [user, setUser] = useState({
         email: '',
         name: '',
@@ -30,13 +34,13 @@ function MainPage(props) {
         lastname: '',
         dashboards: [{ columns: [], shared: [] }],
     });
-    const [
-        userProfile,
-        dispatch,
-        currentDash,
-        setCurrentDash,
-    ] = useGlobalUserStore();
-    console.log('logging userProfile from MainPage component', userProfile);
+    // const [
+    //     userProfile,
+    //     dispatch,
+    //     currentDash,
+    //     setCurrentDash,
+    // ] = useGlobalUserStore();
+    // console.log('logging userProfile from MainPage component', userProfile);
     //console.log(props.location.state.email);
     const [sharedToUser, setSharedToUser] = useState([]);
     // const [sharedFromUser, setSharedFromUser] = useState([]);
@@ -106,10 +110,10 @@ function MainPage(props) {
     }
     function switchDashboard(dashboardIndex) {
         setCurrentDashboard(dashboardIndex);
-        setCurrentDash({
-            type: 'CHANGE_DASHBOARD',
-            payload: { currentDash: dashboardIndex },
-        });
+        // setCurrentDash({
+        //     type: 'CHANGE_DASHBOARD',
+        //     payload: { currentDash: dashboardIndex },
+        // });
     }
 
     function updateDashboard(dashboardIndex) {}
@@ -595,11 +599,11 @@ function MainPage(props) {
                     <button
                         type="button"
                         className="btn-lg btn-dark"
-                        onClick={() =>
-                            dispatch({
-                                type: 'ADD_COLUMN',
-                                payload: { currentDashboard: currentDashboard },
-                            })
+                        onClick={() => dispatch({type:'ADD_COLUMN'})
+                            // dispatch({
+                            //     type: 'ADD_COLUMN',
+                            //     payload: { currentDashboard: currentDashboard },
+                            // })
                         }
                     >
                         Add column
@@ -621,4 +625,16 @@ function MainPage(props) {
     );
 }
 
-export default MainPage;
+const mapStateToProps = state => {
+    return {
+        user:state.user
+    }
+}
+
+const mapDispatchtoProps = dispatch => {
+    return {
+        onAddColumn: () => dispatch({type:'ADD_COLUMN'})
+    }
+}
+
+export default connect(mapStateToProps)(MainPage);

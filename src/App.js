@@ -46,7 +46,7 @@ function App() {
     return (
         <Router>
             <GlobalStore>
-                <GlobalUserStore>
+                
                     <Switch>
                         <Route exact path="/" component={LoginPage} />
                         <Route exact path="/login" component={LoginPage} />
@@ -75,7 +75,7 @@ function App() {
                         />
                     </Switch>
                     {/* <Message /> */}
-                </GlobalUserStore>
+                
             </GlobalStore>
         </Router>
 

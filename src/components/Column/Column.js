@@ -11,12 +11,12 @@ function Column(props) {
     // console.log('showing props.columns from column component', props.cards);
     const [cards, setCard] = useState(props.cards ? props.cards : []);
     // const [id, setId] = useState(props.id);
-    const [
-        userProfile,
-        dispatch,
-        currentDashboard,
-        setCurrentDash,
-    ] = useGlobalUserStore();
+    // const [
+    //     userProfile,
+    //     dispatch,
+    //     currentDashboard,
+    //     setCurrentDash,
+    // ] = useGlobalUserStore();
     const [show, setShow] = useState(false);
 
     function showModal() {
@@ -127,16 +127,16 @@ function Column(props) {
             <button
                 type="button"
                 className="btn-sm btn-dark"
-                // onClick={() => props.addCard(props.colIndex)}
-                onClick={() =>
-                    dispatch({
-                        type: 'ADD_CARD',
-                        payload: {
-                            columnIndex: props.colIndex,
-                            currentDashboard: currentDashboard,
-                        },
-                    })
-                }
+                onClick={() => props.addCard(props.colIndex)}
+                // onClick={() =>
+                //     dispatch({
+                //         type: 'ADD_CARD',
+                //         payload: {
+                //             columnIndex: props.colIndex,
+                //             currentDashboard: currentDashboard,
+                //         },
+                //     })
+                // }
             >
                 Add Card
             </button>
