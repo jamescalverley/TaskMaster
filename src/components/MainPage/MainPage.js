@@ -13,6 +13,7 @@ import { secureStorage } from '../../utils';
 import Chat from '../Chat/Chat';
 import Modal from 'react-bootstrap/Modal';
 import {connect} from 'react-redux';
+import * as actionType from '../../store/types';
 import {
     GlobalUserStore,
     useGlobalUserStore,
@@ -599,7 +600,7 @@ function MainPage(props) {
                     <button
                         type="button"
                         className="btn-lg btn-dark"
-                        onClick={() => dispatch({type:'ADD_COLUMN'})
+                        onClick={() => dispatch({type:actionType.ADD_COLUMN})
                             // dispatch({
                             //     type: 'ADD_COLUMN',
                             //     payload: { currentDashboard: currentDashboard },
@@ -633,7 +634,7 @@ const mapStateToProps = state => {
 
 const mapDispatchtoProps = dispatch => {
     return {
-        onAddColumn: () => dispatch({type:'ADD_COLUMN'})
+        onAddColumn: () => dispatch({type:actionType.ADD_COLUMN})
     }
 }
 
