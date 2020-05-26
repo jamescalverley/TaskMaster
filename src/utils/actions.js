@@ -35,6 +35,14 @@ export const updateUser = (payload) => {
   }
 }
 
+export const getUser = (payload) => {
+  return {
+    type: action.GET_USER,
+    payload
+  }
+}
+
+
 export const updateUserProfile = (payload) => {
   return function (dispatch){
     setTimeout(()=>{
@@ -42,4 +50,13 @@ export const updateUserProfile = (payload) => {
     },2000)
   }
   
+}
+
+export const getUserProfile = (payload) => {
+  return async function (dispatch){
+    dispatch(getUser());
+    const url = `/api/getUser/${payload}`;
+    const result = await fetch(url).then((response) => response.json());
+    dispatch(setUser(result));
+  }
 }

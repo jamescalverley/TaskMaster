@@ -24,7 +24,8 @@ console.log("opening socket on main page");
 
 function MainPage(props) {
   const { dispatch, userprofile, currentDash } = props;
-
+  console.log('logging userprofile from start of MainPage',userprofile)
+  console.log('loggin props',props)
   const [user, setUser] = useState({
     email: "",
     name: "",
@@ -62,6 +63,7 @@ function MainPage(props) {
     dispatch(
       action.addColumn({ column: addNewColumn()})
     );
+    dispatch(action.updateUserProfile());
     // user.dashboards[currentDashboard].columns.push(newColumn);
     // setUser({ ...user });
     updateUserProfile(userprofile);
@@ -380,6 +382,7 @@ function MainPage(props) {
   }
 
   async function getUser(email) {
+    console.log('running function getUser with email',email)
     function populateShared() {
       // console.log('SHARED To USER LENGTH IS:', sharedTo.length);
       sharedTo.forEach((elem, index) => {
@@ -400,7 +403,7 @@ function MainPage(props) {
     // console.log('logging sharedFrom', sharedFrom);
     populateShared();
     dispatch(action.setUser({ user: user }));
-    await setUser({ ...user });
+    // await setUser({ ...user });
     await setCurrentUser(user.email);
     // await setCurrentDashboard(0);
     // setSharedFromUser([...sharedFrom]);
@@ -417,6 +420,8 @@ function MainPage(props) {
   }
 
   useEffect(function () {
+    console.log('useEffect called');
+    dispatch(action.getUserProfile(currentUser));
     getUser(currentUser);
 
     // getAllUsers();
@@ -440,7 +445,7 @@ function MainPage(props) {
     width: "80%",
     padding: "32px",
   };
-
+  console.log('logging userprofile before render',userprofile);
   return (
     <div className="dashboard-main">
       <div className="dashboard-header">
@@ -465,7 +470,7 @@ function MainPage(props) {
           </div>
           <div className="addedUsers">
             <button type="button" className="btn btn-sm btn-secondary user">
-              {userprofile.dashboards[currentDash].owner}
+              {userprofile ? userprofile.dashboards[currentDash].owner:null}
             </button>
             {userprofile.dashboards[currentDash].shared.map((element) => {
               return (

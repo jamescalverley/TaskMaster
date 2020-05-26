@@ -8,3 +8,4 @@ export const SET_CURR_DASHBOARD = 'SET_CURR_DASHABORD';
 export const SET_USER = 'SET_USER';
 export const UPDATE_COL_TITLE = 'UPDATE_COL_TITLE';
 export const UPDATE_USER = 'UPDATE_USER';
+export const GET_USER = 'GET_USER';

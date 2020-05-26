@@ -20,7 +20,7 @@ const logger = store => {
     }
 }
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION__  || compose;
-const store = createStore(user,composeEnhancer(applyMiddleware(logger,thunk)));
+const store = createStore(user,applyMiddleware(logger,thunk));
 
 ReactDOM.render(
     <React.StrictMode>
