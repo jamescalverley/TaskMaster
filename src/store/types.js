@@ -1,1 +1,10 @@
 export const ADD_COLUMN = 'ADD_COLUMN';
+export const DELETE_COLUMN = 'DELETE_COLUMN';
+export const ADD_CARD = 'ADD_CARD';
+export const DELETE_CARD = 'DELETE_CARD';
+export const ADD_DASHBOARD = 'ADD_DASHBOARD';
+export const DELETE_DASHBOARD = 'DELETE_DASHBOARD';
+export const SET_CURR_DASHBOARD = 'SET_CURR_DASHABORD';
+export const SET_USER = 'SET_USER';
+export const UPDATE_COL_TITLE = 'UPDATE_COL_TITLE';
+export const UPDATE_USER = 'UPDATE_USER';
