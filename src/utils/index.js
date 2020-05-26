@@ -1,5 +1,6 @@
 import * as SecureStorage from "secure-web-storage";
 import * as CryptoJS from 'crypto-js';
+import { v4 as uuidv4 } from 'uuid';
 
 const SECRET_KEY = 'S3cr@7!';
 
@@ -41,4 +42,13 @@ export const isLogin = () => {
     }
 
     return false;
+}
+
+export const addColumn = () => {
+    const newColumn = {
+        name: 'Hello',
+        id: uuidv4(),
+        cards: [],
+    };
+    return newColumn;
 }
