@@ -1,4 +1,5 @@
-import * as actionType from "./types";
+import * as actionType from "./types"
+
 const initialState = {
   user: {
     email: "",
@@ -24,12 +25,15 @@ const initialState = {
     sharedByUser: [],
   },
   currentDashboard: 0,
-};
+  currentUser:""
+}
 
 const user = (state = initialState, action) => {
-  let newState = { ...state };
-  let currentDashboard = state.currentDashboard;
+
+  const newState = { ...state };
+  const currentDashboard = state.currentDashboard;
   let dashboard;
+
   switch (action.type) {
     case actionType.ADD_COLUMN:
       dashboard = { ...state.user.dashboards[currentDashboard] };
@@ -43,10 +47,13 @@ const user = (state = initialState, action) => {
       newState.user.dashboards[currentDashboard] = dashboard;
       return newState;
 
-    case actionType.SET_USER:
-      const oldState = { ...state };
-      newState = { ...oldState, ...action.payload };
+    case actionType.SET_USER_PROFILE:
+      newState.user = {...action.payload}
       return newState;
+
+    case actionType.SET_CURRENT_USER:
+      newState.currentUser = action.payload
+      return newState
 
     case actionType.DELETE_CARD:
       return state;
