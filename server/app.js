@@ -1,10 +1,6 @@
 // require('dotenv').config();
 const express = require('express');
 const async = require('async');
-const mailjet = require('node-mailjet').connect(
-    '9bbf027ee6279e41c94fe9415814fe62',
-    'e7ad8b61eb1ba86f544198bb47a52f0d'
-);
 const axios = require('axios');
 const app = express();
 const http = require('http').createServer(app);
@@ -221,39 +217,7 @@ app.post('/api/notify', async (req, res) => {
     // });
     // console.log(response);
 
-    const request = mailjet.post('send', { version: 'v3.1' }).request({
-        Messages: [
-            {
-                From: {
-                    Email: 'taskmaster.notification@gmail.com',
-                    Name: 'TaskMaster',
-                },
-                To: [
-                    {
-                        Email: 'startanant@gmail.com',
-                        Name: 'Anant',
-                    },
-                    { Email: 'james.calverley3@gmail.com', Name: 'James' },
-                    { Email: 'przemek.rudzki@gmail.com', Name: 'Przemek' },
-                ],
-                TemplateID: 1353168,
-                TemplateLanguage: true,
-                Subject: 'Invitation to collaborate',
-            },
-        ],
-    });
-    request
-        .then((result) => {
-            // console.log(result.body);
-        })
-        .catch((err) => {
-            // console.log(err.statusCode);
-        });
-
-    res.json({
-        answer: 'ok',
-    });
-});
+})
 app.post('/api/updateUserProfile', async (req, res) => {
     // console.log(req.body);
     // user = { ...user, ...req.body };
