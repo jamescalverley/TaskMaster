@@ -383,31 +383,33 @@ function MainPage(props) {
 
   async function getUser(email) {
     console.log('running function getUser with email',email)
-    function populateShared() {
-      // console.log('SHARED To USER LENGTH IS:', sharedTo.length);
-      sharedTo.forEach((elem, index) => {
-        elem.sharedByUser[0].dashboards.forEach((el, idx) => {
-          user.dashboards.push(elem.dashboards[el]);
-        });
-      });
-      // setUser({ ...user });
-    }
-    const url = `/api/getUser/${email}`;
-    const result = await fetch(url).then((response) => response.json());
-    console.log("loggin getUser response from server: ", result);
-    const user = result[0][0];
-    const sharedTo = result[1];
+    // function populateShared() {
+    //   // console.log('SHARED To USER LENGTH IS:', sharedTo.length);
+    //   sharedTo.forEach((elem, index) => {
+    //     elem.sharedByUser[0].dashboards.forEach((el, idx) => {
+    //       user.dashboards.push(elem.dashboards[el]);
+    //     });
+    //   });
+    //   // setUser({ ...user });
+    // }
+    // const url = `/api/getUser/${email}`;
+    // const result = await fetch(url).then((response) => response.json());
+    // console.log("loggin getUser response from server: ", result);
+    // const user = result[0][0];
+    // const sharedTo = result[1];
+    dispatch(action.getUserProfile(email));
     // console.log('LOGGING getUSer call sharedTo', sharedTo);
     // const sharedFrom = result[2];
     // console.log('logging sharedTo', sharedTo);
     // console.log('logging sharedFrom', sharedFrom);
-    populateShared();
-    dispatch(action.setUser({ user: user }));
+    // populateShared();
+    // dispatch(action.setUser({ user: user }));
     // await setUser({ ...user });
-    await setCurrentUser(user.email);
+    // await setCurrentUser(user.email);
+    dispatch(action.setCurrentUser(email));
     // await setCurrentDashboard(0);
     // setSharedFromUser([...sharedFrom]);
-    await setSharedToUser([...sharedTo]);
+    // await setSharedToUser([...sharedTo]);
     // socket.emit('username', user.email);
     //adding shared dashboards to user dashboard list
     // await socketOpen();
@@ -421,7 +423,7 @@ function MainPage(props) {
 
   useEffect(function () {
     console.log('useEffect called');
-    dispatch(action.getUserProfile(currentUser));
+    // dispatch(action.getUserProfile(currentUser));
     getUser(currentUser);
 
     // getAllUsers();
