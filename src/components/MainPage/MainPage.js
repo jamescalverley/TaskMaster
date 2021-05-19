@@ -418,16 +418,6 @@ function MainPage(props) {
         });
     }, []);
 
-    const mainPageStyle = {
-        width: '80%',
-        padding: '32px',
-        display: 'flex',
-        justifyContent: 'center',
-    };
-    const dashboardControlStyle = {
-        width: '80%',
-        padding: '32px',
-    };
 
     return (
         <div className="dashboard-main">
