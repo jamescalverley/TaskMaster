@@ -1,16 +1,12 @@
-// const MongoClient = require('mongodb').MongoClient;
 const mongoose = require('mongoose');
 require('dotenv').config();
-const db_user = process.env.DB_USER || '';
-const db_pass = process.env.DB_PASS || '';
-const db_name = process.env.DB_NAME || '';
-const db_host = process.env.DB_HOST || '';
-console.log(db_host);
-mongoose.connect(db_host, {
+
+const db_uri = process.env.DB_URI || '';
+console.log("MongoDB connected".cyan);
+mongoose.connect(db_uri, {
     useNewUrlParser: true,
-    user: db_user,
-    pass: db_pass,
-    authSource: db_name,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
 });
 
 const db = mongoose.connection;

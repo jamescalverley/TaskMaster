@@ -1,10 +1,14 @@
 // require('dotenv').config();
 const express = require('express');
 const async = require('async');
-const mailjet = require('node-mailjet').connect(
-    '9bbf027ee6279e41c94fe9415814fe62',
-    'e7ad8b61eb1ba86f544198bb47a52f0d'
-);
+const colors = require('colors');
+
+//* disables mailjet
+// const mailjet = require('node-mailjet').connect(
+//     '9bbf027ee6279e41c94fe9415814fe62',
+//     'e7ad8b61eb1ba86f544198bb47a52f0d'
+// );
+
 const axios = require('axios');
 const app = express();
 const http = require('http').createServer(app);
@@ -221,38 +225,40 @@ app.post('/api/notify', async (req, res) => {
     // });
     // console.log(response);
 
-    const request = mailjet.post('send', { version: 'v3.1' }).request({
-        Messages: [
-            {
-                From: {
-                    Email: 'taskmaster.notification@gmail.com',
-                    Name: 'TaskMaster',
-                },
-                To: [
-                    {
-                        Email: 'startanant@gmail.com',
-                        Name: 'Anant',
-                    },
-                    { Email: 'james.calverley3@gmail.com', Name: 'James' },
-                    { Email: 'przemek.rudzki@gmail.com', Name: 'Przemek' },
-                ],
-                TemplateID: 1353168,
-                TemplateLanguage: true,
-                Subject: 'Invitation to collaborate',
-            },
-        ],
-    });
-    request
-        .then((result) => {
-            // console.log(result.body);
-        })
-        .catch((err) => {
-            // console.log(err.statusCode);
-        });
+    //* disables mailjet
+    // const request = mailjet.post('send', { version: 'v3.1' }).request({
+    //     Messages: [
+    //         {
+    //             From: {
+    //                 Email: 'taskmaster.notification@gmail.com',
+    //                 Name: 'TaskMaster',
+    //             },
+    //             To: [
+    //                 {
+    //                     Email: 'startanant@gmail.com',
+    //                     Name: 'Anant',
+    //                 },
+    //                 { Email: 'james.calverley3@gmail.com', Name: 'James' },
+    //                 { Email: 'przemek.rudzki@gmail.com', Name: 'Przemek' },
+    //             ],
+    //             TemplateID: 1353168,
+    //             TemplateLanguage: true,
+    //             Subject: 'Invitation to collaborate',
+    //         },
+    //     ],
+    // });
+    // request
+    //     .then((result) => {
+    //         // console.log(result.body);
+    //     })
+    //     .catch((err) => {
+    //         // console.log(err.statusCode);
+    //     });
 
-    res.json({
-        answer: 'ok',
-    });
+    // res.json({
+    //     answer: 'ok',
+    // });
+    //* ___________
 });
 app.post('/api/updateUserProfile', async (req, res) => {
     // console.log(req.body);
@@ -311,93 +317,95 @@ app.put('/api/updateSharedDashboards', async (req, res) => {
 });
 app.use(express.static('./public'));
 
-io.on('connect', (socket) => {
-    socket.on('disconnect', () => {
-        console.log('a user disconnected', socket.id);
-        usersSockets.forEach((value, key) => {
-            if (value == socket.id) {
-                // console.log('FOUND!');
-                usersSockets.delete(key);
-            }
-        });
-        userRooms.delete(socket.id);
-        // console.log(usersSockets);
-    });
-    console.log('a user connected', socket.id, socket.handshake.query.dash);
-    if (socket.handshake.query.user) {
-        usersSockets.set(socket.handshake.query.user, socket.id);
-    }
-    // if (
-    //     socket.handshake.query.chatuser &&
-    //     socket.handshake.query.chatuser.indexOf('@') > -1 &&
-    //     socket.handshake.query.dash.length > 0
-    // ) {
-    //     usersSockets.set(socket.handshake.query.chatuser, socket.id);
-    //     let user = socket.handshake.query.chatuser;
-    //     let room = socket.handshake.query.dash;
-    //     socket.join('abc', (err) => {
-    //         if (err) {
-    //             console.log('error');
-    //         }
-    //         console.log(user + ' joined room:' + room);
-    //     });
-    // }
-    socket.on('chatopen', (user, dash) => {
-        console.log('user joining chat room', user, dash);
-        socket.join(dash);
-        io.to(dash).emit('chat', `${user} joined`);
-        userRooms.set(socket.id, dash);
-        console.log(userRooms);
-    });
-    socket.on('chatchange', (user, dash) => {
-        console.log('user leaving dashboard room', user, dash);
-        io.to(dash).emit('chat', `${user} left room`);
-        socket.leave(dash, (err) => {
-            userRooms.delete(socket.id);
-            if (err) console.log('ERROR LEAVING ROOM');
-        });
-    });
-    socket.on('chat', (user, msg, dash) => {
-        // socket.join(dash);
-        console.log(`received chat message from ${user}`, msg, dash);
-        let room = dash;
-        console.log('room is: ', room);
-        io.to(dash).emit('chat', user, msg);
-    });
-    socket.on('update', (msg) => {
-        // console.log('update:', msg, socket.id);
-        const obj = JSON.parse(msg);
-        obj.shared.forEach((el) => {
-            if (usersSockets.has(el.to)) {
-                // console.log('can emit!');
-                socket.broadcast
-                    .to(usersSockets.get(el.to))
-                    .emit('update', 'update coming!');
-            }
-        });
+//* disables socket.io
+// io.on('connect', (socket) => {
+//     socket.on('disconnect', () => {
+//         console.log('a user disconnected', socket.id);
+//         usersSockets.forEach((value, key) => {
+//             if (value == socket.id) {
+//                 // console.log('FOUND!');
+//                 usersSockets.delete(key);
+//             }
+//         });
+//         userRooms.delete(socket.id);
+//         // console.log(usersSockets);
+//     });
+//     console.log('a user connected', socket.id, socket.handshake.query.dash);
+//     if (socket.handshake.query.user) {
+//         usersSockets.set(socket.handshake.query.user, socket.id);
+//     }
+//     // if (
+//     //     socket.handshake.query.chatuser &&
+//     //     socket.handshake.query.chatuser.indexOf('@') > -1 &&
+//     //     socket.handshake.query.dash.length > 0
+//     // ) {
+//     //     usersSockets.set(socket.handshake.query.chatuser, socket.id);
+//     //     let user = socket.handshake.query.chatuser;
+//     //     let room = socket.handshake.query.dash;
+//     //     socket.join('abc', (err) => {
+//     //         if (err) {
+//     //             console.log('error');
+//     //         }
+//     //         console.log(user + ' joined room:' + room);
+//     //     });
+//     // }
+//     socket.on('chatopen', (user, dash) => {
+//         console.log('user joining chat room', user, dash);
+//         socket.join(dash);
+//         io.to(dash).emit('chat', `${user} joined`);
+//         userRooms.set(socket.id, dash);
+//         console.log(userRooms);
+//     });
+//     socket.on('chatchange', (user, dash) => {
+//         console.log('user leaving dashboard room', user, dash);
+//         io.to(dash).emit('chat', `${user} left room`);
+//         socket.leave(dash, (err) => {
+//             userRooms.delete(socket.id);
+//             if (err) console.log('ERROR LEAVING ROOM');
+//         });
+//     });
+//     socket.on('chat', (user, msg, dash) => {
+//         // socket.join(dash);
+//         console.log(`received chat message from ${user}`, msg, dash);
+//         let room = dash;
+//         console.log('room is: ', room);
+//         io.to(dash).emit('chat', user, msg);
+//     });
+//     socket.on('update', (msg) => {
+//         // console.log('update:', msg, socket.id);
+//         const obj = JSON.parse(msg);
+//         obj.shared.forEach((el) => {
+//             if (usersSockets.has(el.to)) {
+//                 // console.log('can emit!');
+//                 socket.broadcast
+//                     .to(usersSockets.get(el.to))
+//                     .emit('update', 'update coming!');
+//             }
+//         });
 
-        // socket.emit('update', `user updated:${msg.user}`);
-    });
-    socket.on('username', (msg) => {
-        console.log('username:', msg, socket.id);
-    });
-    socket.on('updateother', (msg) => {
-        console.log('update other triggered', msg, socket.id);
-        const obj = JSON.parse(msg);
-        obj.sharedOther.forEach((el) => {
-            if (usersSockets.has(el)) {
-                console.log('found it! can emit update shered!');
-                socket.broadcast
-                    .to(usersSockets.get(el))
-                    .emit('update', 'update coming!');
-            }
-        });
-    });
+//         // socket.emit('update', `user updated:${msg.user}`);
+//     });
+//     socket.on('username', (msg) => {
+//         console.log('username:', msg, socket.id);
+//     });
+//     socket.on('updateother', (msg) => {
+//         console.log('update other triggered', msg, socket.id);
+//         const obj = JSON.parse(msg);
+//         obj.sharedOther.forEach((el) => {
+//             if (usersSockets.has(el)) {
+//                 console.log('found it! can emit update shered!');
+//                 socket.broadcast
+//                     .to(usersSockets.get(el))
+//                     .emit('update', 'update coming!');
+//             }
+//         });
+//     });
 
-    // console.log(usersSockets);
-});
+//     // console.log(usersSockets);
+// });
+//* __________________
 
 const PORT = 8080;
 http.listen(PORT, (req, res) => {
-    console.log(`server started on ${PORT}`);
+    console.log(`App running on PORT:${PORT}`.cyan);
 });
