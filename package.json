@@ -3,13 +3,18 @@
     "version": "0.1.0",
     "private": true,
     "proxy": "http://localhost:8080",
+    "main": "server_taskmaster.js",
+    "homepage": "https://localhost:8080",
     "dependencies": {
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.5.0",
         "@testing-library/user-event": "^7.2.1",
+        "async": "^2.6.3",
+        "axios": "^0.21.1",
         "bcrypt": "^5.0.1",
+        "colors": "^1.4.0",
         "crypto-js": "^4.0.0",
-        "mongoose": "^5.9.9",
+        "mongoose": "^5.12.10",
         "react": "^16.13.1",
         "react-bootstrap": "^1.0.1",
         "react-dom": "^16.13.1",
@@ -19,7 +24,8 @@
         "socket.io": "^2.3.0",
         "styled": "^1.0.0",
         "styled-components": "^5.1.0",
-        "uuid": "^7.0.3"
+        "uuid": "^7.0.3",
+        "uuidv4": "^6.2.8"
     },
     "scripts": {
         "start": "react-scripts start",

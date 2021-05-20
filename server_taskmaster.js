@@ -15,18 +15,18 @@ const http = require('http').createServer(app);
 var io = require('socket.io')(http);
 const qs = require('qs');
 const { uuid } = require('uuidv4');
-const fs = require('fs');
+//const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
 // import { v4 as uuidv4 } from 'uuid';
-let db = require('./models');
-let user = require('./user.json');
-let usersSockets = new Map();
-let userRooms = new Map();
+let db = require('./server/models');
+let user = require('./server/user.json');
+// let usersSockets = new Map();
+// let userRooms = new Map();
 // let sharedDashboard = require('./shared.json');
 
 // const db_host = process.env.DB_HOST;
-// console.log(process.env);
+
 
 async function getUsers() {
     const result = await db.find({}, { email: 1 });
@@ -269,33 +269,34 @@ app.post('/api/updateUserProfile', async (req, res) => {
     );
     res.json(response);
 });
-app.get('/login', (req, res) => {
-    const options = {
-        root: path.join(__dirname, 'public'),
-    };
-    res.sendFile('index.html', options);
-});
+// app.get('/login', (req, res) => {
+//     const options = {
+//         root: path.join(__dirname, 'public'),
+//     };
+//     res.sendFile('index.html', options);
+// });
 
-app.get('/projectdashboard', (req, res) => {
-    const options = {
-        root: path.join(__dirname, 'public'),
-    };
-    res.sendFile('index.html', options);
-});
+// app.get('/projectdashboard', (req, res) => {
+//     const options = {
+//         root: path.join(__dirname, 'public'),
+//     };
+//     res.sendFile('index.html', options);
+// });
 
-app.get('/mytasks', (req, res) => {
-    const options = {
-        root: path.join(__dirname, 'public'),
-    };
-    res.sendFile('index.html', options);
-});
+// app.get('/mytasks', (req, res) => {
+//     console.log(req.url)
+//     const options = {
+//         root: path.join(__dirname, 'public'),
+//     };
+//     res.sendFile('index.html', options);
+// });
 
-app.get('/register', (req, res) => {
-    const options = {
-        root: path.join(__dirname, 'public'),
-    };
-    res.sendFile('index.html', options);
-});
+// app.get('/register', (req, res) => {
+//     const options = {
+//         root: path.join(__dirname, 'public'),
+//     };
+//     res.sendFile('index.html', options);
+// });
 
 app.put('/api/updateSharedDashboards', async (req, res) => {
     console.log('loggin content for updating shared dashboards', req.body);
@@ -315,7 +316,7 @@ app.put('/api/updateSharedDashboards', async (req, res) => {
         res.json('ok');
     });
 });
-app.use(express.static('./public'));
+
 
 //* disables socket.io
 // io.on('connect', (socket) => {
@@ -405,7 +406,29 @@ app.use(express.static('./public'));
 // });
 //* __________________
 
-const PORT = 8080;
+console.log("ENV".green, process.env.NODE_ENV);
+
+if ( process.env.NODE_ENV === 'staging'){
+    app.get('/', (req,res) => {
+        console.log("request incoming");
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    });
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.get('*', (req,res) => {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    });
+} else if ( process.env.NODE_ENV === 'production'){
+    app.get('/', (req,res) => {
+        console.log("request incoming");
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+    app.use(express.static(path.join(__dirname, 'build')));
+    app.get('*', (req,res) => {
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+}
+
+const PORT = process.env.NODE_ENV === 'production' ? 5011 : 8080;
 http.listen(PORT, (req, res) => {
     console.log(`App running on PORT:${PORT}`.cyan);
 });

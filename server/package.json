@@ -2,7 +2,7 @@
   "name": "taskmaster-server",
   "version": "1.0.0",
   "description": "Professional task organizer to increase your productivity",
-  "main": "app.js",
+  "main": "server_taskmaster.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
