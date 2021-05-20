@@ -17,7 +17,7 @@ const qs = require('qs');
 const { uuid } = require('uuidv4');
 //const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 // import { v4 as uuidv4 } from 'uuid';
 let db = require('./server/models');
 let user = require('./server/user.json');
@@ -147,8 +147,13 @@ app.post('/api/addUser', async (req, res) => {
     user.dashboards[0].columns[0].cards[0].id = uuid();
     let passwordHash = '';
     const saltRounds = 10;
-    passwordHash = await bcrypt.hash(req.body.password, saltRounds);
-    console.log(`[addUser] (hash=${passwordHash}) req.body:`, user);
+    passwordHash = await bcrypt.hash( 
+        req.body.password, 
+        saltRounds, 
+        null, 
+        (err,hash) => {if(err){console.log("Error --addUser", err)}}
+    );
+    console.log(`--[addUser]-- (hash=${passwordHash}) req.body:`, user);
     user.password = passwordHash;
 
     try {
@@ -160,49 +165,51 @@ app.post('/api/addUser', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-    console.log(req.body);
-    user = { ...user, ...req.body };
-    const query = { email: req.body.email };
-    //const userProfile = await db.userprofile.findOne(query);
-    let userProfile = await db.userprofile.find(query, {
-        _id: 0,
-        email: 1,
-        password: 1,
-    });
-    // userProfile = JSON.stringify(userProfile);
-    // userProfile = JSON.parse(userProfile);
-    // console.log(b[0].password);
-
-    // let userProfile = JSON.stringify(userProfile1);
-    // userProfile = JSON.parse(userProfile);
-    console.log(typeof userProfile);
-    let response;
-    if (userProfile) {
-        userProfile = JSON.stringify(userProfile);
-        userProfile = JSON.parse(userProfile);
-        console.log(typeof userProfile);
-        console.log(req.body.password);
-        if (userProfile[0]) {
-            console.log(userProfile[0].password);
-            const isValidPassword = await bcrypt.compare(
-                req.body.password,
-                userProfile[0].password
-            );
-            if (isValidPassword) {
-                response = {
-                    message: 'OK',
-                    email: userProfile[0].email,
-                };
+    try {
+        console.log("Login", req.body);
+        user = { ...user, ...req.body };
+        const query = { email: req.body.email };
+            //const userProfile = await db.userprofile.findOne(query);
+            let userProfile = await db.userprofile.find(query, {
+            _id: 0,
+            email: 1,
+            password: 1,
+            });
+        console.log("user:", userProfile);
+        let response;
+        if (userProfile) {
+            userProfile = JSON.stringify(userProfile);
+            userProfile = JSON.parse(userProfile);
+            console.log(req.body.password);
+            if (userProfile[0]) {
+                console.log("Password:", userProfile[0].password);
+                const isValidPassword = await bcrypt.compare(
+                    req.body.password,
+                    userProfile[0].password
+                );
+                if (isValidPassword) {
+                    response = {
+                        message: 'OK',
+                        email: userProfile[0].email,
+                    };
+                } else {
+                    response = { message: 'Invalid username/password' };
+                }
             } else {
                 response = { message: 'Invalid username/password' };
             }
         } else {
-            response = { message: 'Invalid username/password' };
+            response = { message: 'Database error' };
         }
-    } else {
-        response = { message: 'Database error' };
+        res.json(response);
+
+    } catch (err) {
+        console.log("Error!!", err);
+        res.status(500).json({
+            message: "error -- internal error"
+        })
     }
-    res.json(response);
+    
 });
 
 app.post('/api/notify', async (req, res) => {
@@ -408,7 +415,7 @@ app.put('/api/updateSharedDashboards', async (req, res) => {
 
 console.log("ENV".green, process.env.NODE_ENV);
 
-if ( process.env.NODE_ENV === 'staging'){
+if ( process.env.NODE_ENV === 'staging' ){
     app.get('/', (req,res) => {
         console.log("request incoming");
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -417,7 +424,7 @@ if ( process.env.NODE_ENV === 'staging'){
     app.get('*', (req,res) => {
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
-} else if ( process.env.NODE_ENV === 'production'){
+} else if ( process.env.NODE_ENV === 'production' ){
     app.get('/', (req,res) => {
         console.log("request incoming");
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
