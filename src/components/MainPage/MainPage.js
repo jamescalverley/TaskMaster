@@ -3,16 +3,12 @@ import '../../components-style.css';
 import Column from '../Column/Column';
 import ColumnTitle from '../ColumTitle/ColumnTitle';
 import InviteCard from '../InviteCard/InviteCard';
-import SharedWith from '../SharedWith/SharedWith';
-import SwitchUser from '../SwitchUser/SwitchUser';
 import DashboardControl from '../DashboardControl/DashboardControl';
-import SharedDashboardInfoPanel from '../sharedDashboardInfoPanel/sharedDashboardInfoPanel';
 import { v4 as uuidv4 } from 'uuid';
 import { secureStorage } from '../../utils';
-import Chat from '../Chat/Chat';
 import Modal from 'react-bootstrap/Modal';
 
-const query = { query: `user=${secureStorage.getItem('email')}` };
+//const query = { query: `user=${secureStorage.getItem('email')}` };
 
 function MainPage(props) {
     const [user, setUser] = useState({
@@ -23,15 +19,13 @@ function MainPage(props) {
         dashboards: [{ columns: [], shared: [] }],
     });
 
-    //console.log(props.location.state.email);
-    const [sharedToUser, setSharedToUser] = useState([]);
+    // state for shared dashboard functionality 
+    //const [sharedToUser, setSharedToUser] = useState([]);
     // const [sharedFromUser, setSharedFromUser] = useState([]);
-    const [allUsers, setAllUsers] = useState([]);
-    // const [loop, setLoop] = useState(0);
-    //const [currentUser, setCurrentUser] = useState('user@user.com');
+    //const [allUsers, setAllUsers] = useState([]);
+    
     let email;
     if (secureStorage.getItem('email')) {
-        //email = localStorage.getItem('email');
         email = secureStorage.getItem('email');
     } else {
         email = props.location.state.email
@@ -40,7 +34,7 @@ function MainPage(props) {
     }
     const [currentUser, setCurrentUser] = useState(email);
     const [currentDashboard, setCurrentDashboard] = useState(0);
-    const shared = user.dashboards[currentDashboard].shared;
+    //const shared = user.dashboards[currentDashboard].shared;
 
     function addColumn() {
         const newColumn = {
@@ -93,7 +87,6 @@ function MainPage(props) {
         setCurrentDashboard(dashboardIndex);
     }
 
-    function updateDashboard(dashboardIndex) {}
     function deleteColumn(colIndex) {
         // console.log('function deleteColumn called', colIndex);
         user.dashboards[currentDashboard].columns.splice(colIndex, 1);
@@ -116,11 +109,11 @@ function MainPage(props) {
         updateUserProfile(user);
     }
 
-    async function switchUser(email) {
-        await setCurrentDashboard(0);
-        await setCurrentUser(email);
-        await getUser(email);
-    }
+    // async function switchUser(email) {
+    //     await setCurrentDashboard(0);
+    //     await setCurrentUser(email);
+    //     await getUser(email);
+    // }
 
     async function inviteUser(email) {
         const url = `/api/getUserName/${email}`;
@@ -129,27 +122,27 @@ function MainPage(props) {
             'loggin response from server for /api/getUserName ',
             result
         );
-        if (result.answer == 'nothing found') {
+        if (result.answer === 'nothing found') {
             result.name = '';
             result.firstname = '';
             result.lastname = '';
             result.email = email;
         }
-        if (user.email != user.dashboards[currentDashboard].owner) {
+        if (user.email !== user.dashboards[currentDashboard].owner) {
             alert(
                 'you cannot add user to dashboard. You are not dashboard owner'
             );
             return;
         }
         let findResult = user.dashboards[currentDashboard].shared.find(
-            (el) => el.email == result.email
+            (el) => el.email === result.email
         );
         if (!findResult) {
             user.dashboards[currentDashboard].shared.push(result);
         }
 
         const userIndex = user.sharedByUser.findIndex(
-            (element) => element.to == `${email}`
+            (element) => element.to === `${email}`
         );
         if (userIndex > -1) {
             user.sharedByUser[userIndex].dashboards.push(currentDashboard);
@@ -178,7 +171,7 @@ function MainPage(props) {
         // let emailIndex = user.dashboards[currentDashboard].shared.indexOf(
         //     email
         // );
-        if (email == user.email) {
+        if (email === user.email) {
             alert(
                 'Please ask dashboard owner to remove you from this dashboard'
             );
@@ -196,7 +189,7 @@ function MainPage(props) {
         }
 
         const userIndex = user.sharedByUser.findIndex(
-            (element) => element.to == `${email}`
+            (element) => element.to === `${email}`
         );
         if (userIndex > -1) {
             user.sharedByUser.splice(userIndex, 1);
@@ -205,26 +198,26 @@ function MainPage(props) {
         }
     }
 
-    async function updateShared(from, to, index) {
-        console.log('upateShared function called: ', from, to, index);
-        const data = {
-            sharedFrom: from,
-            sharedTo: to,
-            dashboards: [index.toString()],
-        };
-        const url = '/api/insertShared';
-        const result = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then((response) => response.json());
-        console.log(
-            'loggin response from server for /api/insertShared: ',
-            result
-        );
-    }
+    // async function updateShared(from, to, index) {
+    //     console.log('upateShared function called: ', from, to, index);
+    //     const data = {
+    //         sharedFrom: from,
+    //         sharedTo: to,
+    //         dashboards: [index.toString()],
+    //     };
+    //     const url = '/api/insertShared';
+    //     const result = await fetch(url, {
+    //         method: 'POST',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     }).then((response) => response.json());
+    //     console.log(
+    //         'loggin response from server for /api/insertShared: ',
+    //         result
+    //     );
+    // }
 
     async function saveCard(cardid, colIndex, cardIndex) {
         console.log('function saveCard called', cardid, colIndex, cardIndex);
@@ -316,14 +309,14 @@ function MainPage(props) {
     async function updateUserProfile(user) {
         let updatedUser = { ...user };
         let filteredDashboardsOwner = updatedUser.dashboards.filter(
-            (el) => el.owner == user.email
+            (el) => el.owner === user.email
         );
         let filteredDashboardsOther = updatedUser.dashboards.filter(
             (dashboard) => dashboard.owner !== user.email
         );
         updatedUser.dashboards = filteredDashboardsOwner;
         const url = '/api/updateUserProfile';
-        const result = await fetch(url, {
+        await fetch(url, {
             method: 'POST',
             body: JSON.stringify(updatedUser),
             headers: {
@@ -340,7 +333,7 @@ function MainPage(props) {
         }
         if (filteredDashboardsOther.length > 0) {
             const url = '/api/updateSharedDashboards';
-            const result = await fetch(url, {
+            await fetch(url, {
                 method: 'PUT',
                 body: JSON.stringify(filteredDashboardsOther),
                 headers: {
@@ -353,10 +346,10 @@ function MainPage(props) {
                 el.shared.forEach((el1) => toInform.push(el1.email));
             });
             toInform = [...new Set(toInform)];
-            const toEmit = {
-                user: user.email,
-                sharedOther: toInform,
-            };
+            // const toEmit = {
+            //     user: user.email,
+            //     sharedOther: toInform,
+            // };
         }
         console.log('filtered OTHER dashboards:', filteredDashboardsOther);
     }
@@ -384,15 +377,15 @@ function MainPage(props) {
         await setCurrentUser(user.email);
         // await setCurrentDashboard(0);
         // setSharedFromUser([...sharedFrom]);
-        await setSharedToUser([...sharedTo]);
+        //await setSharedToUser([...sharedTo]);
         
     }
-    async function getAllUsers() {
-        const url = '/api/getAllUsers';
-        const result = await fetch(url).then((response) => response.json());
-        console.log('logging response from server for getAllUsers', result);
-        setAllUsers([...result]);
-    }
+    // async function getAllUsers() {
+    //     const url = '/api/getAllUsers';
+    //     const result = await fetch(url).then((response) => response.json());
+    //     console.log('logging response from server for getAllUsers', result);
+    //     //setAllUsers([...result]);
+    // }
 
     useEffect(function () {
         getUser(currentUser);
@@ -435,9 +428,9 @@ function MainPage(props) {
                                             uninviteUser(element.email)
                                         }
                                         type="button"
-                                        class="btn btn-sm btn-primary user"
+                                        className="btn btn-sm btn-primary user"
                                     >
-                                        {element.firstname != ''
+                                        {element.firstname !== ''
                                             ? element.firstname
                                             : element.email}{' '}
                                         X
@@ -448,7 +441,7 @@ function MainPage(props) {
                     </div>
                 </div>
                 <div className="addedUsers" style={{ color: 'white' }}>
-                    Logged in as: {user.name == '' ? user.email : user.name}
+                    Logged in as: {user.name === '' ? user.email : user.name}
                 </div>
                 <div className="dash-delete">
                     {/* <button
@@ -460,7 +453,7 @@ function MainPage(props) {
                     </button> */}
                     <button
                         type="button"
-                        class="btn btn-sm btn-danger"
+                        className="btn btn-sm btn-danger"
                         onClick={modalShow}
                     >
                         Delete
@@ -474,14 +467,14 @@ function MainPage(props) {
                         <Modal.Footer>
                             <button
                                 type="button"
-                                class="btn btn-outline-dark"
+                                className="btn btn-outline-dark"
                                 onClick={modalHide}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="button"
-                                class="btn btn-danger"
+                                className="btn btn-danger"
                                 onClick={handleDelete}
                             >
                                 Delete
@@ -561,12 +554,7 @@ function MainPage(props) {
                     <SharedDashboardInfoPanel sharedDashboards={sharedToUser} />
                 ) : null}
             </div> */}
-            {user.dashboards[currentDashboard].shared.length > 0 ? (
-                <Chat
-                    dashid={user.dashboards[currentDashboard].id}
-                    user={user.email}
-                />
-            ) : null}
+            
         </div>
     );
 }

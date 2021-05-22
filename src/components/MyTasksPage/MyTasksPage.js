@@ -1,11 +1,13 @@
+/* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
 import { secureStorage } from '../../utils';
+import { v4 as uuidv4 } from 'uuid';
 
 function MyTasksPage() {
     const [user, setUser] = useState({ dashboards: [{ columns: [] }] });
-    const [sharedToUser, setSharedToUser] = useState([]);
-    const [currentDashboard, setCurrentDashboard] = useState(0);
-    const shared = user.dashboards[currentDashboard].shared;
+    // const [sharedToUser, setSharedToUser] = useState([]);
+    // const [currentDashboard, setCurrentDashboard] = useState(0);
+    // const shared = user.dashboards[currentDashboard].shared;
     async function getUser(email) {
         function populateShared() {
             sharedTo.forEach((elem, index) => {
@@ -20,7 +22,7 @@ function MyTasksPage() {
         const sharedTo = result[1];
         populateShared();
         await setUser({ ...user });
-        await setSharedToUser([...sharedTo]);
+        //await setSharedToUser([...sharedTo]);
 
         //adding shared dashboards to user dashboard list
     }
@@ -29,52 +31,49 @@ function MyTasksPage() {
         : 'user@user.com';
     useEffect(function () {
         getUser(userEmail);
-    }, []);
+    }, [userEmail]);
     return (
         <>
             <div className="mytasks-header">My Tasks</div>
-
             <div className="mytasks-container">
                 {user.dashboards.map((dashboard) => {
                     return (
-                        <>
-                            <div className="mytasks-dash">
-                                <div className="mytasks-dash-title">
-                                    <h4>{dashboard.name}</h4>
-                                </div>
-                                {dashboard.columns.map((column) => {
-                                    return (
-                                        <div className="mytasks-column">
-                                            <div className="mytasks-column-title">
-                                                <h6>{column.name}</h6>
-                                            </div>
-                                            {column.cards.map((card) => {
-                                                if (
-                                                    card.title !== '' &&
-                                                    card.description !== ''
-                                                ) {
-                                                    return (
-                                                        <div className="mytasks-card">
-                                                            <div className="cardTitle">
-                                                                {card.title}
-                                                            </div>
-                                                            <div className="cardDesc">
-                                                                {
-                                                                    card.description
-                                                                }{' '}
-                                                            </div>
-                                                            <div className="cardDueDate">
-                                                                {card.duedate}
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            })}
-                                        </div>
-                                    );
-                                })}
+                        <div key={uuidv4()} className="mytasks-dash">
+                            <div className="mytasks-dash-title">
+                                <h4>{dashboard.name}</h4>
                             </div>
-                        </>
+                            {dashboard.columns.map((column) => {
+                                return (
+                                    <div key={uuidv4()} className="mytasks-column">
+                                        <div className="mytasks-column-title">
+                                            <h6>{column.name}</h6>
+                                        </div>
+                                        {column.cards.map((card) => {
+                                            if (
+                                                card.title !== '' &&
+                                                card.description !== ''
+                                            ) {
+                                                return (
+                                                    <div key={uuidv4()} className="mytasks-card">
+                                                        <div className="cardTitle">
+                                                            {card.title}
+                                                        </div>
+                                                        <div className="cardDesc">
+                                                            {
+                                                                card.description
+                                                            }{' '}
+                                                        </div>
+                                                        <div className="cardDueDate">
+                                                            {card.duedate}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                        })}
+                                    </div>
+                                );
+                            })}
+                        </div>
                     );
                 })}
             </div>

@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
 import '../../components-style.css';
 import { Link } from 'react-router-dom';
 import { useGlobalStore } from '../GlobalStore/GlobalStore';
-import Chat from '../Chat/Chat';
 
 function SideNav() {
     const [globalData, dispatch] = useGlobalStore();
@@ -21,7 +20,7 @@ function SideNav() {
 
             <Link to="/projectdashboard" className="nav-item">
                 <div className="nav-icon">
-                    <i class="fas fa-columns"></i>
+                    <i className="fas fa-columns"></i>
                 </div>
                 <div className="nav-heading">Dashboards</div>
             </Link>
@@ -42,9 +41,9 @@ function SideNav() {
           </div>
       </Link> */}
 
-            <Link onClick={logout} className="nav-item">
+            <Link to="/login" onClick={logout} className="nav-item">
                 <div className="nav-icon">
-                    <i class="fas fa-door-open"></i>
+                    <i className="fas fa-door-open"></i>
                 </div>
                 <div className="nav-heading">Logout</div>
             </Link>

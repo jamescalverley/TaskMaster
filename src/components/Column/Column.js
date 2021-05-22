@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../../components-style.css';
 import PropTypes from 'prop-types';
 import Card from '../Card/Card';
 import Draggable from '../Draggable/Draggable';
-import styled from 'styled-components';
-import ColumnTitle from '../ColumTitle/ColumnTitle';
 import { v4 as uuidv4 } from 'uuid';
 
 function Column(props) {
     // console.log('showing props.columns from column component', props.cards);
-    const [cards, setCard] = useState(props.cards ? props.cards : []);
+    const [cards] = useState(props.cards ? props.cards : []);
     // const [id, setId] = useState(props.id);
 
     const [show, setShow] = useState(false);
@@ -105,7 +103,6 @@ function Column(props) {
             id={props.id}
             onDrop={drop}
             onDragOver={allowDrop}
-            // style={props.style}
             onDragEnd={dragEnd}
             key={uuidv4()}
         >
@@ -115,7 +112,7 @@ function Column(props) {
                     className="btn-sm btn-dark colDel"
                     onClick={() => props.deleteColumn(props.colIndex)}
                 >
-                    <i class="far fa-trash-alt"></i>
+                    <i className="far fa-trash-alt"></i>
                 </button>
             </div>
             {props.colTitle}

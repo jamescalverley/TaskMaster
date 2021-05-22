@@ -1,25 +1,10 @@
+/* eslint-disable no-useless-escape */
 import React, { useState, useRef } from 'react';
 import { useGlobalStore } from '../GlobalStore/GlobalStore';
 import { Redirect } from 'react-router-dom';
-import { login } from '../../utils';
+//import { login } from '../../utils';
 import { Link } from 'react-router-dom';
 import Message from '../Message/Message';
-
-// const LoginPage = (props) => {
-
-//     const handleLogin = () => {
-//         login();
-//         props.history.push('/projectdashboard');
-//     }
-
-//     return (
-//         <div>
-//             <h1>Sign in</h1>
-
-//             <button onClick={() => handleLogin()}>Click here to log in</button>
-//         </div>
-//     );
-// };
 
 function RegisterPage(props) {
     const [userData, setUserData] = useState({
@@ -28,7 +13,7 @@ function RegisterPage(props) {
         lastname: '',
         password: '',
     });
-    const [globalData, dispatch] = useGlobalStore();
+    const [dispatch] = useGlobalStore();
     const [isRegistered, setIsRegistered] = useState(false);
     const inputEmail = useRef();
     const inputPassword = useRef();
@@ -37,25 +22,6 @@ function RegisterPage(props) {
         const { id, value } = e.target; //
 
         setUserData({ ...userData, [id]: value });
-    }
-
-    async function register() {
-        let testUser = {
-            email: 'justin@trudeau.com',
-            name: 'justin',
-            firstname: 'Justin',
-            lastname: 'Trudeau',
-            password: 'myOwnSecret@1',
-        };
-        const url = '/api/addUser';
-        const result = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(testUser),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then((response) => response.json());
-        console.log(result);
     }
 
     async function registerUser(e) {
@@ -138,26 +104,10 @@ function RegisterPage(props) {
         //props.history.push('/projectdashboard');
     }
 
-    function handleRegister() {
-        register();
-        //registerUser(e);
-        props.history.push('/projectdashboard');
-    }
 
     return (
-        // <div
-        //     style={{
-        //         backgroundImage: "url('./img/login.jpg')",
-        //         backgroundSize: 'cover',
-        //         backgroundPosition: 'center',
-        //         height: '90vh',
-        //         opacity: '0.7',
-        //     }}
-        // >
-
         <div className="registerPage">
             {isRegistered ? <Redirect to="/login" /> : ''}
-
             <div className="container-left">
                 <div className="title-container">
                     <h1>TaskMaster</h1>

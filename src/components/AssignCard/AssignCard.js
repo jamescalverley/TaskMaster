@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
 
 function AssignCard(props) {
     const [email, setEmail] = useState(props.shared);
     const [shared, setShared] = useState([]);
-    const selected = useRef(null);
+    //const selected = useRef(null);
 
     function testAssign(){
         console.log("Assign to card")
@@ -57,7 +58,7 @@ function AssignCard(props) {
                                 <a 
                                     className="dropdown-item" 
                                     onClick={testAssign}
-                                    href="#"
+                                    href="/"
                                     >
                                         {element.name} - {element.email}
                                 </a>

@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from '../Header/Header'
 import SideNav from '../SideNav/SideNav';
 import MainPage from '../MainPage/MainPage';
 import MyTasksPage from '../MyTasksPage/MyTasksPage';
 import SettingsPage from '../SettingsPage/SettingsPage';
 
-
 function TaskMaster(props) {
     //console.log(props.title);
     const title = props.title;
     return(
-        <>
         <div className="taskmaster">
             <div className="sideNav-container">
                 <SideNav />
@@ -23,7 +21,6 @@ function TaskMaster(props) {
                 
             </div>
         </div>
-        </>
     );
 }
 

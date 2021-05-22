@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './Modal.css';
 
 function Draggable(props) {
-    const showHideClassName = props.show
-        ? 'modal display-block'
-        : 'modal display-none';
+    // const showHideClassName = props.show
+    //     ? 'modal display-block'
+    //     : 'modal display-none';
 
     function drag(e) {
         e.dataTransfer.setData('transfer', e.target.id);
@@ -16,8 +16,8 @@ function Draggable(props) {
     }
     return (
         <div
-            data-colIndex={props.colIndex}
-            data-cardIndex={props.cardIndex}
+            data-colindex={props.colIndex}
+            data-cardindex={props.cardIndex}
             id={props.id}
             draggable="true"
             onDragStart={drag}
