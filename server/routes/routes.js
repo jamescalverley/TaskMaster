@@ -50,7 +50,7 @@ router
 
 router
   .route('/getUser/:email')
-  .post( getUser )
+  .get( getUser )
 
 router
   .route('/updateSharedDashboards')

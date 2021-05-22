@@ -7,7 +7,7 @@ let user = require('../user.json');
 // user account routes
 const loginUser = async (req, res) => {
   try {
-      console.log("Login --userController", req.body);
+    console.log("Login --userController", req.body);
       user = { ...user, ...req.body };
       const query = { email: req.body.email };
           let userProfile = await db.userprofile.find(query, {
@@ -148,7 +148,6 @@ const insertShared = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-    // console.log('getUser called for email:', req.params);
     const query = { email: req.params.email };
     const response = await db.userprofile.find(query);
     const sharedDashboardsTo = await db.userprofile.find(

@@ -8,15 +8,11 @@ import SwitchUser from '../SwitchUser/SwitchUser';
 import DashboardControl from '../DashboardControl/DashboardControl';
 import SharedDashboardInfoPanel from '../sharedDashboardInfoPanel/sharedDashboardInfoPanel';
 import { v4 as uuidv4 } from 'uuid';
-import openSocket from 'socket.io-client';
 import { secureStorage } from '../../utils';
 import Chat from '../Chat/Chat';
 import Modal from 'react-bootstrap/Modal';
 
 const query = { query: `user=${secureStorage.getItem('email')}` };
-const socket = openSocket('http://localhost:8080', query);
-console.log('opening socket on main page');
-// const socket = openSocket('https://taskmaster.kiterunner.usermd.net', query);
 
 function MainPage(props) {
     const [user, setUser] = useState({
@@ -56,7 +52,6 @@ function MainPage(props) {
         user.dashboards[currentDashboard].columns.push(newColumn);
         setUser({ ...user });
         updateUserProfile(user);
-        // socket.emit('update', 'column added', newColumn.id);
     }
 
     const [deleteModal, setDeleteModal] = useState(false);
@@ -342,7 +337,6 @@ function MainPage(props) {
                 shared: user.sharedByUser,
             };
             console.log(toEmit);
-            socket.emit('update', JSON.stringify(toEmit));
         }
         if (filteredDashboardsOther.length > 0) {
             const url = '/api/updateSharedDashboards';
@@ -363,24 +357,22 @@ function MainPage(props) {
                 user: user.email,
                 sharedOther: toInform,
             };
-            socket.emit('updateother', JSON.stringify(toEmit));
         }
         console.log('filtered OTHER dashboards:', filteredDashboardsOther);
     }
 
     async function getUser(email) {
         function populateShared() {
-            // console.log('SHARED To USER LENGTH IS:', sharedTo.length);
             sharedTo.forEach((elem, index) => {
                 elem.sharedByUser[0].dashboards.forEach((el, idx) => {
                     user.dashboards.push(elem.dashboards[el]);
                 });
             });
             // setUser({ ...user });
-        }
+        };
         const url = `/api/getUser/${email}`;
         const result = await fetch(url).then((response) => response.json());
-        console.log('loggin getUser response from server: ', result);
+        console.log('------> getUser _____ response from server: ', result);
         const user = result[0][0];
         const sharedTo = result[1];
         // console.log('LOGGING getUSer call sharedTo', sharedTo);
@@ -393,9 +385,7 @@ function MainPage(props) {
         // await setCurrentDashboard(0);
         // setSharedFromUser([...sharedFrom]);
         await setSharedToUser([...sharedTo]);
-        // socket.emit('username', user.email);
-        //adding shared dashboards to user dashboard list
-        // await socketOpen();
+        
     }
     async function getAllUsers() {
         const url = '/api/getAllUsers';
@@ -406,18 +396,7 @@ function MainPage(props) {
 
     useEffect(function () {
         getUser(currentUser);
-
-        // getAllUsers();
-
-        // socket.emit('username', user.email);
-    }, []);
-    useEffect(() => {
-        socket.on('update', (msg) => {
-            console.log('msg received:', msg);
-            getUser(currentUser);
-        });
-    }, []);
-
+    }, [currentUser]);
 
     return (
         <div className="dashboard-main">

@@ -11,7 +11,6 @@ app.use(express.json());
 
 const PORT = process.env.NODE_ENV === 'production' ? 5011 : 8080;
 
-
 const apiRoutes = require('./server/routes/routes')
 app.use('/api/', apiRoutes )
 
@@ -19,7 +18,6 @@ console.log("ENV".green, process.env.NODE_ENV);
 
 if ( process.env.NODE_ENV === 'staging' ){
     app.get('/', (req,res) => {
-        console.log("request incoming");
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
     app.use(express.static(path.join(__dirname, 'public')));
@@ -28,16 +26,15 @@ if ( process.env.NODE_ENV === 'staging' ){
     });
 } else if ( process.env.NODE_ENV === 'production' ){
     app.get('/', (req,res) => {
-        console.log("request incoming");
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
     });
     app.use(express.static(path.join(__dirname, 'build')));
     app.get('*', (req,res) => {
         res.sendFile(path.join(__dirname, 'build', 'index.html'));
     });
-}
-
+};
 
 app.listen(PORT, (req, res) => {
     console.log(`App running on PORT:${PORT}`.cyan);
 });
+
